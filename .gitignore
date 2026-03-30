@@ -6,3 +6,4 @@ managed_components/
 dependencies.lock
 components/nanocbor/nanocbor/
 components/tinycbor/tinycbor/
+results.txt

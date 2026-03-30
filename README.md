@@ -51,12 +51,12 @@ PSON encodes 2x faster than CBOR and decodes 3-9x faster, with a standalone impl
 
 | Protocol | Image Size | Lines of Code | Library |
 |---|---:|---:|---|
+| **IOTMP** | **867,040 B** | **48** | iotmp-espidf + iotmp-embedded |
 | MQTT | 907,776 B | 122 | esp_mqtt (built-in) + cJSON |
 | HTTP | 909,348 B | 109 | esp_http_client (built-in) + cJSON |
-| **IOTMP** | **938,844 B** | **48** | iotmp-espidf + iotmp-embedded |
 | CoAP | 952,896 B | 128 | libcoap (espressif/coap component) |
 
-All four protocols produce binaries within 5% of each other. IOTMP requires 2.3-2.9x fewer lines of application code while providing more protocol-level features (resource discovery, schema introspection, server-controlled streaming, compact mode).
+All four protocols produce binaries within 10% of each other. IOTMP produces the smallest binary while requiring 2.3-2.7x fewer lines of application code and providing more protocol-level features (resource discovery, schema introspection, server-controlled streaming, compact mode).
 
 ### Qualitative capabilities
 
@@ -96,15 +96,12 @@ Uses Docker image `espressif/idf:v5.4`. The script automatically clones NanoCBOR
 
 ### Protocol benchmarks
 
-Each subdirectory under `protocol/` is a standalone ESP-IDF project:
-
 ```bash
 cd protocol/
-docker run --rm -v $(pwd)/iotmp:/project -w /project espressif/idf:v5.4 \
-    bash -c "idf.py set-target esp32 && idf.py build && idf.py size"
+./build.sh
 ```
 
-Replace `iotmp` with `mqtt`, `coap`, or `http` for other protocols.
+Uses Docker image `espressif/idf:v5.4`. The script builds all four protocols (IOTMP, MQTT, HTTP, CoAP), extracts image sizes and component breakdowns, and saves results to `protocol/results.txt`. The IOTMP build requires the [iotmp-espidf](https://github.com/thinger-io/iotmp-espidf) and [iotmp-embedded](https://github.com/thinger-io/iotmp-embedded) libraries on the host -- see `protocol/README.md` for path configuration.
 
 ## License
 
