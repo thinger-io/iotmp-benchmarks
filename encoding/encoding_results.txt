@@ -1,0 +1,22 @@
+
+════════════════════════════════════════════════════════════════
+  ENCODING BENCHMARK — BUILD RESULTS
+════════════════════════════════════════════════════════════════
+
+  Environment:
+    Docker:    espressif/idf:v5.4
+    Target:    ESP32
+    Payload:   {"temperature": 23.5, "humidity": 60, "pressure": 1013, "label": "outdoor"}
+
+  Encoding         Image Size      main.c  Notes
+  ────────  ──────────  ──────  ─────
+  PSON           195044 bytes   202 lines  Standalone encoder+decoder (165+179 lines)
+  CBOR           196076 bytes   221 lines  NanoCBOR library
+  TinyCBOR       200888 bytes   226 lines  TinyCBOR (Intel) library
+
+  PSON standalone implementation:
+    pson_encode.h:  165 lines
+    pson_decode.h:  179 lines
+    Total:          344 lines (full encode+decode)
+
+  Generated: 2026-03-29 19:40 UTC
