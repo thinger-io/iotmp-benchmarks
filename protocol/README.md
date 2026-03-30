@@ -64,9 +64,13 @@ To build only specific protocols:
 The IOTMP build requires the iotmp-espidf and iotmp-embedded libraries on the host. The build script mounts them into the Docker container at `/components/`. Configure the paths via environment variables or edit the defaults at the top of `build.sh`:
 
 ```bash
-# Default paths (edit build.sh or set env vars):
-export IOTMP_ESPIDF_LIB="$HOME/Desarrollos/iotmp-espidf"
-export IOTMP_EMBEDDED_LIB="$HOME/Desarrollos/iotmp-embedded"
+# Clone the IOTMP libraries:
+git clone https://github.com/thinger-io/IOTMP-ESPIDF.git /path/to/iotmp-espidf
+git clone https://github.com/thinger-io/IOTMP-Embedded.git /path/to/iotmp-embedded
+
+# Set paths and build:
+export IOTMP_ESPIDF_LIB=/path/to/iotmp-espidf
+export IOTMP_EMBEDDED_LIB=/path/to/iotmp-embedded
 ./build.sh
 ```
 
@@ -93,8 +97,8 @@ Replace `mqtt` with `coap` or `http` for other protocols.
 ```bash
 docker run --rm \
     -v $(pwd)/iotmp:/project \
-    -v $HOME/Desarrollos/iotmp-espidf:/components/iotmp-espidf:ro \
-    -v $HOME/Desarrollos/iotmp-embedded:/components/iotmp-embedded:ro \
+    -v $IOTMP_ESPIDF_LIB:/components/iotmp-espidf:ro \
+    -v $IOTMP_EMBEDDED_LIB:/components/iotmp-embedded:ro \
     -w /project espressif/idf:v5.4 \
     bash -c "rm -rf build sdkconfig && idf.py set-target esp32 && idf.py build && idf.py size"
 ```
@@ -105,8 +109,8 @@ After building, use `idf.py size-components` to get per-library breakdowns:
 
 ```bash
 docker run --rm -v $(pwd)/iotmp:/project \
-    -v $HOME/Desarrollos/iotmp-espidf:/components/iotmp-espidf:ro \
-    -v $HOME/Desarrollos/iotmp-embedded:/components/iotmp-embedded:ro \
+    -v $IOTMP_ESPIDF_LIB:/components/iotmp-espidf:ro \
+    -v $IOTMP_EMBEDDED_LIB:/components/iotmp-embedded:ro \
     -w /project espressif/idf:v5.4 \
     bash -c "idf.py size-components"
 ```

@@ -22,8 +22,31 @@ IDF_DOCKER="espressif/idf:v5.4"
 
 # ─── Configurable host paths for IOTMP libraries ─────────────────────
 # Override these environment variables or edit the defaults below.
-IOTMP_ESPIDF_LIB="${IOTMP_ESPIDF_LIB:-$HOME/Desarrollos/iotmp-espidf}"
-IOTMP_EMBEDDED_LIB="${IOTMP_EMBEDDED_LIB:-$HOME/Desarrollos/iotmp-embedded}"
+IOTMP_ESPIDF_LIB="${IOTMP_ESPIDF_LIB:-}"
+IOTMP_EMBEDDED_LIB="${IOTMP_EMBEDDED_LIB:-}"
+
+# ─── Validate IOTMP library paths ────────────────────────────────────
+needs_iotmp=false
+for arg in "$@"; do [ "$arg" = "iotmp" ] && needs_iotmp=true; done
+[ $# -eq 0 ] && needs_iotmp=true
+
+if $needs_iotmp; then
+    if [ -z "$IOTMP_ESPIDF_LIB" ] || [ -z "$IOTMP_EMBEDDED_LIB" ]; then
+        echo "ERROR: IOTMP library paths not set."
+        echo "Clone the IOTMP libraries and set:"
+        echo "  export IOTMP_ESPIDF_LIB=/path/to/iotmp-espidf"
+        echo "  export IOTMP_EMBEDDED_LIB=/path/to/iotmp-embedded"
+        echo ""
+        echo "Or skip IOTMP:  ./build.sh mqtt http coap"
+        exit 1
+    fi
+    if [ ! -d "$IOTMP_ESPIDF_LIB" ] || [ ! -d "$IOTMP_EMBEDDED_LIB" ]; then
+        echo "ERROR: IOTMP library paths not found:"
+        echo "  IOTMP_ESPIDF_LIB=$IOTMP_ESPIDF_LIB"
+        echo "  IOTMP_EMBEDDED_LIB=$IOTMP_EMBEDDED_LIB"
+        exit 1
+    fi
+fi
 
 # ─── Projects to build ───────────────────────────────────────────────
 if [ $# -gt 0 ]; then
